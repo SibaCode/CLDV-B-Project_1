@@ -1,17 +1,10 @@
-using Azure;
-using Azure.Data.Tables;
-
 namespace ABCRetailDemo.Models
 {
-    public class Customer : ITableEntity
+    public class Customer
     {
-        public string PartitionKey { get; set; } = "Customer";
-        public string RowKey { get; set; } = Guid.NewGuid().ToString();
-        public DateTimeOffset? Timestamp { get; set; }
-        public ETag ETag { get; set; }
-
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
+        public string Id { get; set; }   // This will map to RowKey from Azure Table
+        public string Name { get; set; } // Maps to CustomerEntity.Name
+        public string Email { get; set; } // Maps to CustomerEntity.Email
+        public string Phone { get; set; } // Maps to CustomerEntity.Phone
     }
 }

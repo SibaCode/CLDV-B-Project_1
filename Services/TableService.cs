@@ -5,66 +5,50 @@ namespace ABCRetailDemo.Services
 {
     public class TableService
     {
-        private readonly TableClient _productTable;
+        private readonly TableServiceClient _serviceClient;
         private readonly TableClient _customerTable;
+        private readonly TableClient _productTable;
 
-        public TableService(string connectionString)
+        public TableService(IConfiguration config)
         {
-            var serviceClient = new TableServiceClient(connectionString);
+            var connectionString = config["AzureStorage:ConnectionString"];
+            if (string.IsNullOrEmpty(connectionString))
+                throw new ArgumentNullException("AzureStorage:ConnectionString is missing in appsettings.json");
 
-            // Products table
-            _productTable = serviceClient.GetTableClient("Products");
-            _productTable.CreateIfNotExists();
+            _serviceClient = new TableServiceClient(connectionString);
 
-            // Customers table
-            _customerTable = serviceClient.GetTableClient("Customers");
+            // Initialize tables
+            _customerTable = _serviceClient.GetTableClient("Customers");
             _customerTable.CreateIfNotExists();
+
+            _productTable = _serviceClient.GetTableClient("Products");
+            _productTable.CreateIfNotExists();
         }
 
-        // -------------------- Product Methods --------------------
-        public async Task AddProductAsync(Product product)
-        {
-            product.PartitionKey = "Product";
-            product.RowKey = Guid.NewGuid().ToString();
-            await _productTable.AddEntityAsync(product);
-        }
-
-        public async Task<List<Product>> GetProductsAsync()
-        {
-            var result = new List<Product>();
-            await foreach (var p in _productTable.QueryAsync<Product>(e => e.PartitionKey == "Product"))
-            {
-                result.Add(p);
-            }
-            return result;
-        }
-
-        public async Task DeleteProductAsync(string rowKey)
-        {
-            await _productTable.DeleteEntityAsync("Product", rowKey);
-        }
-
-        // -------------------- Customer Methods --------------------
-        public async Task AddCustomerAsync(Customer customer)
-        {
-            customer.PartitionKey = "Customer";
-            customer.RowKey = Guid.NewGuid().ToString();
+        public async Task AddCustomerAsync(CustomerEntity customer) =>
             await _customerTable.AddEntityAsync(customer);
-        }
 
-        public async Task<List<Customer>> GetCustomersAsync()
+        public async Task AddProductAsync(ProductEntity product) =>
+            await _productTable.AddEntityAsync(product);
+
+        public async Task<List<CustomerEntity>> GetCustomersAsync()
         {
-            var result = new List<Customer>();
-            await foreach (var c in _customerTable.QueryAsync<Customer>(e => e.PartitionKey == "Customer"))
+            var list = new List<CustomerEntity>();
+            await foreach (var customer in _customerTable.QueryAsync<CustomerEntity>())
             {
-                result.Add(c);
+                list.Add(customer);
             }
-            return result;
+            return list;
         }
 
-        public async Task DeleteCustomerAsync(string rowKey)
+        public async Task<List<ProductEntity>> GetProductsAsync()
         {
-            await _customerTable.DeleteEntityAsync("Customer", rowKey);
+            var list = new List<ProductEntity>();
+            await foreach (var product in _productTable.QueryAsync<ProductEntity>())
+            {
+                list.Add(product);
+            }
+            return list;
         }
     }
 }

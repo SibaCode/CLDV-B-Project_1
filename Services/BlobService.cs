@@ -4,26 +4,21 @@ namespace ABCRetailDemo.Services
 {
     public class BlobService
     {
-        private readonly BlobContainerClient _containerClient;
+        private readonly BlobContainerClient _container;
 
-        public BlobService(string connectionString, string containerName)
+        public BlobService(IConfiguration config)
         {
-            var client = new BlobServiceClient(connectionString);
-            _containerClient = client.GetBlobContainerClient(containerName);
-            _containerClient.CreateIfNotExists();
+            var blobService = new BlobServiceClient(config["AzureStorage:ConnectionString"]);
+            _container = blobService.GetBlobContainerClient("product-images");
+            _container.CreateIfNotExists();
         }
 
-        public async Task<string> UploadFileAsync(IFormFile file)
+        public async Task<string> UploadImageAsync(IFormFile file)
         {
-            var blobClient = _containerClient.GetBlobClient(file.FileName);
-            using var stream = file.OpenReadStream();
-            await blobClient.UploadAsync(stream, true);
-            return file.FileName; // store blob name
-        }
-
-        public string GetBlobUri(string blobName)
-        {
-            return _containerClient.GetBlobClient(blobName).Uri.ToString();
+            var blobClient = _container.GetBlobClient(file.FileName);
+            await using var stream = file.OpenReadStream();
+            await blobClient.UploadAsync(stream, overwrite: true);
+            return blobClient.Uri.ToString();
         }
     }
 }

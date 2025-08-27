@@ -1,0 +1,33 @@
+@model List<ProductEntity>
+@{
+    ViewData["Title"] = "Products";
+}
+
+<h2>Products</h2>
+<a href="/Product/Create" style="background-color:orange;color:white;padding:10px 15px;border-radius:5px;text-decoration:none;">Add Product</a>
+<table style="width:100%; margin-top:15px; border-collapse:collapse;">
+    <thead style="background-color:black; color:white;">
+        <tr>
+            <th style="padding:10px;">Name</th>
+            <th style="padding:10px;">Price</th>
+            <th style="padding:10px;">Description</th>
+            <th style="padding:10px;">Image</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var product in Model)
+        {
+            <tr style="border-bottom:1px solid #ddd;">
+                <td style="padding:10px;">@product.ProductName</td>
+                <td style="padding:10px;">@product.Price</td>
+                <td style="padding:10px;">@product.Description</td>
+                <td style="padding:10px;">
+                    @if(!string.IsNullOrEmpty(product.ImageUrl))
+                    {
+                        <img src="@product.ImageUrl" alt="Product Image" style="height:50px;"/>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

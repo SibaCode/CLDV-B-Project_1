@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2>Dashboard</h2>
+<div style="display:flex; gap:20px; flex-wrap:wrap;">
+    <div style="background-color:orange; color:white; padding:20px; border-radius:10px; width:200px; text-align:center;">
+        <h3>Total Customers</h3>
+        <p>@ViewBag.TotalCustomers</p>
+    </div>
+    <div style="background-color:black; color:white; padding:20px; border-radius:10px; width:200px; text-align:center;">
+        <h3>Total Products</h3>
+        <p>@ViewBag.TotalProducts</p>
+    </div>
+    <div style="background-color:orange; color:white; padding:20px; border-radius:10px; width:200px; text-align:center;">
+        <h3>Total Orders</h3>
+        <p>@ViewBag.TotalOrders</p>
+    </div>
+    <div style="background-color:black; color:white; padding:20px; border-radius:10px; width:200px; text-align:center;">
+        <h3>Pending Orders</h3>
+        <p>@ViewBag.PendingOrders</p>
+    </div>
+    <div style="background-color:orange; color:white; padding:20px; border-radius:10px; width:200px; text-align:center;">
+        <h3>Total Product Images</h3>
+        <p>@ViewBag.TotalProductImages</p>
+    </div>
+</div>

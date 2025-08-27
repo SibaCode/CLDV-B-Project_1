@@ -1,0 +1,26 @@
+@model List<CustomerEntity>
+@{
+    ViewData["Title"] = "Customers";
+}
+
+<h2>Customers</h2>
+<a href="/Customer/Create" style="background-color:orange;color:white;padding:10px 15px;border-radius:5px;text-decoration:none;">Add Customer</a>
+<table style="width:100%; margin-top:15px; border-collapse:collapse;">
+    <thead style="background-color:black; color:white;">
+        <tr>
+            <th style="padding:10px;">Full Name</th>
+            <th style="padding:10px;">Email</th>
+            <th style="padding:10px;">Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var customer in Model)
+        {
+            <tr style="border-bottom:1px solid #ddd;">
+                <td style="padding:10px;">@customer.FullName</td>
+                <td style="padding:10px;">@customer.Email</td>
+                <td style="padding:10px;">@customer.Phone</td>
+            </tr>
+        }
+    </tbody>
+</table>

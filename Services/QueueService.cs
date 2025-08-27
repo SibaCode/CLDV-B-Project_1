@@ -4,26 +4,15 @@ namespace ABCRetailDemo.Services
 {
     public class QueueService
     {
-        private readonly QueueClient _queueClient;
+        private readonly QueueClient _queue;
 
-        public QueueService(string connectionString, string queueName)
+        public QueueService(IConfiguration config)
         {
-            _queueClient = new QueueClient(connectionString, queueName);
-            _queueClient.CreateIfNotExists();
+            _queue = new QueueClient(config["AzureStorage:ConnectionString"], "orders");
+            _queue.CreateIfNotExists();
         }
 
-        public async Task EnqueueMessageAsync(string message)
-        {
-            await _queueClient.SendMessageAsync(message);
-        }
-
-        public async Task<List<string>> GetMessagesAsync()
-        {
-            var list = new List<string>();
-            var messages = await _queueClient.ReceiveMessagesAsync(32);
-            foreach (var msg in messages.Value)
-                list.Add(msg.MessageText);
-            return list;
-        }
+        public async Task EnqueueOrderAsync(string message) =>
+            await _queue.SendMessageAsync(message);
     }
 }

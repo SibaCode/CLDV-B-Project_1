@@ -1,0 +1,22 @@
+@model List<string>
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<h2>Orders</h2>
+<a href="/Order/Create" style="background-color:orange;color:white;padding:10px 15px;border-radius:5px;text-decoration:none;">Create Order</a>
+<table style="width:100%; margin-top:15px; border-collapse:collapse;">
+    <thead style="background-color:black; color:white;">
+        <tr>
+            <th style="padding:10px;">Order JSON</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var order in Model)
+        {
+            <tr style="border-bottom:1px solid #ddd;">
+                <td style="padding:10px;">@order</td>
+            </tr>
+        }
+    </tbody>
+</table>

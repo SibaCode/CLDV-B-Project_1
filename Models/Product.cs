@@ -1,18 +1,11 @@
-using Azure;
-using Azure.Data.Tables;
-
 namespace ABCRetailDemo.Models
 {
-    public class Product : ITableEntity
+    public class Product
     {
-        public string PartitionKey { get; set; }
-        public string RowKey { get; set; }
-        public DateTimeOffset? Timestamp { get; set; }
-        public ETag ETag { get; set; }
-
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
-        public string ImageUrl { get; set; }
+        public string Id { get; set; }       // Maps to RowKey
+        public string Name { get; set; }     // Maps to ProductEntity.Name
+        public string Description { get; set; } // Maps to ProductEntity.Description
+        public decimal Price { get; set; }   // Maps to ProductEntity.Price
+        public string ImageUrl { get; set; } // Maps to ProductEntity.ImageUrl
     }
 }
