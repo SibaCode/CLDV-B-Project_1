@@ -6,29 +6,20 @@ namespace ABCRetailDemo.Controllers
     public class DashboardController : Controller
     {
         private readonly TableService _tableService;
-        private readonly BlobService _blobService;
-        private readonly QueueService _queueService;
+        private readonly FileService _fileService;
 
-        public DashboardController(TableService tableService, BlobService blobService, QueueService queueService)
+        public DashboardController(TableService tableService, FileService fileService)
         {
             _tableService = tableService;
-            _blobService = blobService;
-            _queueService = queueService;
+            _fileService = fileService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var customers = await _tableService.GetCustomersAsync();
-            var products = await _tableService.GetProductsAsync();
-            // For demo, we can just show number of orders in queue if implemented
-            var totalOrders = 0; 
-            var totalImages = 0; // Later you can implement Blob listing
-
-            ViewBag.TotalCustomers = customers.Count;
-            ViewBag.TotalProducts = products.Count;
-            ViewBag.TotalOrders = totalOrders;
-            ViewBag.PendingOrders = totalOrders;
-            ViewBag.TotalProductImages = totalImages;
+            ViewBag.TotalCustomers = (await _tableService.GetCustomersAsync()).Count;
+            ViewBag.TotalProducts = (await _tableService.GetProductsAsync()).Count;
+            ViewBag.TotalOrders = (await _tableService.GetOrdersAsync()).Count;
+            ViewBag.TotalLogs = await _fileService.GetFileCountAsync();
 
             return View();
         }

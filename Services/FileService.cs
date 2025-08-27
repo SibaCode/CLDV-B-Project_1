@@ -1,42 +1,47 @@
 using Azure.Storage.Files.Shares;
-using System.IO;
+using Azure.Storage.Files.Shares.Models;
 
 namespace ABCRetailDemo.Services
 {
     public class FileService
     {
-        private readonly ShareClient _share;
+        private readonly ShareClient _shareClient;
 
         public FileService(IConfiguration config)
         {
-            _share = new ShareClient(config["AzureStorage:ConnectionString"], "logs");
-            _share.CreateIfNotExists();
+            
+            var connectionString = config["AzureFiles:ConnectionString"];
+            var shareName = config["AzureFiles:ShareName"]; // e.g., "logs"
+            if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(shareName))
+                throw new ArgumentNullException("AzureFiles connection string or share name is missing.");
+
+            _shareClient = new ShareClient(connectionString, shareName);
+            _shareClient.CreateIfNotExists();
         }
 
-        // Upload a log file
-        public async Task UploadLogAsync(string fileName, string content)
+        // Count files in the root or a folder
+        public async Task<int> GetFileCountAsync(string directoryName = "")
         {
-            var directory = _share.GetRootDirectoryClient();
-            var file = directory.GetFileClient(fileName);
+            ShareDirectoryClient directoryClient = string.IsNullOrEmpty(directoryName)
+                ? _shareClient.GetRootDirectoryClient()
+                : _shareClient.GetDirectoryClient(directoryName);
 
-            await using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content));
-            await file.CreateAsync(stream.Length);
-            await file.UploadAsync(stream);
-        }
-
-        // List all files in the share
-        public async Task<List<string>> ListFilesAsync()
-        {
-            var directory = _share.GetRootDirectoryClient();
-            var files = new List<string>();
-
-            await foreach (var item in directory.GetFilesAndDirectoriesAsync())
+            int count = 0;
+            await foreach (ShareFileItem fileItem in directoryClient.GetFilesAndDirectoriesAsync())
             {
-                if (!item.IsDirectory)
-                    files.Add(item.Name);
+                if (!fileItem.IsDirectory)
+                    count++;
             }
+            return count;
+        }
 
-            return files;
+        // Optional: Upload a log/file
+        public async Task UploadFileAsync(string fileName, Stream content)
+        {
+            var root = _shareClient.GetRootDirectoryClient();
+            var fileClient = root.GetFileClient(fileName);
+            await fileClient.CreateAsync(content.Length);
+            await fileClient.UploadAsync(content);
         }
     }
 }

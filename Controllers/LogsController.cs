@@ -1,37 +1,41 @@
-using Microsoft.AspNetCore.Mvc;
 using ABCRetailDemo.Services;
+using Microsoft.AspNetCore.Mvc;
 
-public class LogsController : Controller
+namespace ABCRetailDemo.Controllers
 {
-    private readonly FileService _fileService;
-
-    public LogsController(FileService fileService)
+    public class LogsController : Controller
     {
-        _fileService = fileService;
-    }
+        private readonly FileService _fileService;
 
-    // GET: Upload form
-    [HttpGet]
-    public IActionResult Upload() => View();
-
-    // POST: Upload log
-    [HttpPost]
-    public async Task<IActionResult> Upload(string fileName, string logContent)
-    {
-        if (!string.IsNullOrWhiteSpace(fileName) && !string.IsNullOrWhiteSpace(logContent))
+        public LogsController(FileService fileService)
         {
-            await _fileService.UploadLogAsync(fileName, logContent);
-            ViewBag.Message = "File uploaded successfully!";
+            _fileService = fileService;
         }
-        return View();
-    }
 
-    // GET: List all logs
-    [HttpGet]
-    public async Task<IActionResult> Index()
-    {
-        var logs = await _fileService.ListFilesAsync();
-        ViewBag.Logs = logs;
-        return View();
+        // Upload form
+        [HttpGet]
+        public IActionResult Upload() => View();
+
+        // Upload POST
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile file)
+        {
+            if (file != null && file.Length > 0)
+            {
+                using var stream = file.OpenReadStream();
+                await _fileService.UploadFileAsync(file.FileName, stream);
+                TempData["Message"] = $"Uploaded {file.FileName}";
+            }
+            return RedirectToAction("Upload");
+        }
+
+        // List file count
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var count = await _fileService.GetFileCountAsync();
+            ViewBag.TotalLogs = count;
+            return View();
+        }
     }
 }
