@@ -1,0 +1,17 @@
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/ABCRetailDemo
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/appsettings.Development.json
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/appsettings.json
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/ABCRetailDemo.dll
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/ABCRetailDemo.deps.json
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/ABCRetailDemo.runtimeconfig.json
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/ABCRetailDemo.pdb
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/Azure.Core.dll
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/Azure.Data.Tables.dll
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/Azure.Storage.Blobs.dll
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/Azure.Storage.Common.dll
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/Azure.Storage.Files.Shares.dll
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/Azure.Storage.Queues.dll
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/Microsoft.Bcl.AsyncInterfaces.dll
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/System.ClientModel.dll
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/System.IO.Hashing.dll
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/bin/Release/net8.0/publish/System.Memory.Data.dll
