@@ -2,16 +2,23 @@
     ViewData["Title"] = "Upload Log";
 }
 
-<h2>Upload Log</h2>
+<h1>Upload Log</h1>
 
-<form asp-action="Upload" method="post" enctype="multipart/form-data">
+<form asp-action="Upload" method="post">
     <div class="mb-3">
-        <input type="file" name="file" class="form-control" required />
+        <label>File Name</label>
+        <input type="text" name="fileName" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label>Log Content</label>
+        <textarea name="logContent" class="form-control" rows="5" required></textarea>
     </div>
     <button type="submit" class="btn btn-primary">Upload</button>
 </form>
 
-@if (TempData["Message"] != null)
+@if (ViewBag.Message != null)
 {
-    <div class="alert alert-success mt-3">@TempData["Message"]</div>
+    <div class="alert alert-success mt-3">
+        @ViewBag.Message
+    </div>
 }

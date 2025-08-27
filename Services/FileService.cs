@@ -9,9 +9,8 @@ namespace ABCRetailDemo.Services
 
         public FileService(IConfiguration config)
         {
-            
             var connectionString = config["AzureFiles:ConnectionString"];
-            var shareName = config["AzureFiles:ShareName"]; // e.g., "logs"
+            var shareName = config["AzureFiles:ShareName"];
             if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(shareName))
                 throw new ArgumentNullException("AzureFiles connection string or share name is missing.");
 
@@ -35,13 +34,30 @@ namespace ABCRetailDemo.Services
             return count;
         }
 
-        // Optional: Upload a log/file
+        // Upload a log/file
         public async Task UploadFileAsync(string fileName, Stream content)
         {
             var root = _shareClient.GetRootDirectoryClient();
             var fileClient = root.GetFileClient(fileName);
             await fileClient.CreateAsync(content.Length);
             await fileClient.UploadAsync(content);
+        }
+
+        // **New**: List all files in the root directory
+        public async Task<List<string>> ListFilesAsync(string directoryName = "")
+        {
+            var files = new List<string>();
+            ShareDirectoryClient directoryClient = string.IsNullOrEmpty(directoryName)
+                ? _shareClient.GetRootDirectoryClient()
+                : _shareClient.GetDirectoryClient(directoryName);
+
+            await foreach (ShareFileItem item in directoryClient.GetFilesAndDirectoriesAsync())
+            {
+                if (!item.IsDirectory)
+                    files.Add(item.Name);
+            }
+
+            return files;
         }
     }
 }

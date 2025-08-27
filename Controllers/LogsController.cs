@@ -1,5 +1,6 @@
 using ABCRetailDemo.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace ABCRetailDemo.Controllers
 {
@@ -12,29 +13,38 @@ namespace ABCRetailDemo.Controllers
             _fileService = fileService;
         }
 
-        // Upload form
-        [HttpGet]
-        public IActionResult Upload() => View();
-
-        // Upload POST
-        [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile file)
-        {
-            if (file != null && file.Length > 0)
-            {
-                using var stream = file.OpenReadStream();
-                await _fileService.UploadFileAsync(file.FileName, stream);
-                TempData["Message"] = $"Uploaded {file.FileName}";
-            }
-            return RedirectToAction("Upload");
-        }
-
-        // List file count
-        [HttpGet]
+        // Display all logs
         public async Task<IActionResult> Index()
         {
-            var count = await _fileService.GetFileCountAsync();
-            ViewBag.TotalLogs = count;
+            var logs = await _fileService.ListFilesAsync();
+            ViewBag.Logs = logs;
+            return View();
+        }
+
+        // GET: Upload log
+        [HttpGet]
+        public IActionResult Upload()
+        {
+            return View();
+        }
+
+        // POST: Upload log content as a file
+        [HttpPost]
+        public async Task<IActionResult> Upload(string fileName, string logContent)
+        {
+            if (string.IsNullOrWhiteSpace(fileName) || string.IsNullOrWhiteSpace(logContent))
+            {
+                ViewBag.Message = "File name and log content are required.";
+                return View();
+            }
+
+            var bytes = Encoding.UTF8.GetBytes(logContent);
+            using var stream = new MemoryStream(bytes);
+
+            // Upload to Azure File Storage
+            await _fileService.UploadFileAsync(fileName, stream);
+
+            ViewBag.Message = $"Log '{fileName}' uploaded successfully!";
             return View();
         }
     }

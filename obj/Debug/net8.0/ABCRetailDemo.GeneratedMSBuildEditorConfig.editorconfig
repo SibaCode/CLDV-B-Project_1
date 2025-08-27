@@ -18,22 +18,6 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = /home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo
 build_property._RazorSourceGeneratorDebug = 
 
-[/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/Views/Customer/Add.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3VzdG9tZXIvQWRkLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/Views/Customer/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3VzdG9tZXIvQ3JlYXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/Views/Customer/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3VzdG9tZXIvSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/Views/Customer/List.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3VzdG9tZXIvTGlzdC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/Views/Customers/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3VzdG9tZXJzL0NyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
