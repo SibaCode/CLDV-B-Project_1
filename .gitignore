@@ -1,6 +1,8 @@
-# Ignore build folders
+# Ignore compiled and publish files
 bin/
 obj/
+publish/
 
-# Ignore production appsettings
+# Ignore secrets
+appsettings.json
 appsettings.Production.json
