@@ -1,6 +1,25 @@
+@{
+    ViewData["Title"] = "Create Order";
+}
+
+<h1>Create Order</h1>
+
 <form asp-action="Create" method="post">
-    <label>Customer ID:</label><input name="CustomerId" /><br/>
-    <label>Product ID:</label><input name="ProductId" /><br/>
-    <label>Quantity:</label><input name="Quantity" type="number"/><br/>
-    <button type="submit">Create Order</button>
+    <div class="mb-3">
+        <label>Customer Name</label>
+        <input type="text" name="customerName" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label>Product Name</label>
+        <input type="text" name="productName" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label>Quantity</label>
+        <input type="number" name="quantity" class="form-control" min="1" required />
+    </div>
+    <div class="mb-3">
+        <label>Price</label>
+        <input type="number" name="price" class="form-control" step="0.01" required />
+    </div>
+    <button type="submit" class="btn btn-success">Create</button>
 </form>

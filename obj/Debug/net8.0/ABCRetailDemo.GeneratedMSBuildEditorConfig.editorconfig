@@ -34,6 +34,22 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3VzdG9tZXIvTGlzdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/Views/Customers/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3VzdG9tZXJzL0NyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/Views/Customers/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3VzdG9tZXJzL0RlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/Views/Customers/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3VzdG9tZXJzL0VkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/Views/Customers/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ3VzdG9tZXJzL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/Views/Dashboard/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRGFzaGJvYXJkL0NyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

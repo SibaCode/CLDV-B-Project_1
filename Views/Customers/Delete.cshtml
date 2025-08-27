@@ -1,0 +1,17 @@
+@model ABCRetailDemo.Models.CustomerEntity
+
+<div class="container mt-5">
+    <div class="card shadow border-0 rounded-3">
+        <div class="card-header bg-dark text-white">
+            <h2>Delete Customer</h2>
+        </div>
+        <div class="card-body">
+            <p>Are you sure you want to delete <strong>@Model.FullName</strong>?</p>
+            <form asp-action="DeleteConfirmed" method="post">
+                <input type="hidden" asp-for="RowKey" />
+                <button type="submit" class="btn btn-danger">Delete</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>

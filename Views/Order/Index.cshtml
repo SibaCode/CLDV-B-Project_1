@@ -1,21 +1,30 @@
-@model List<string>
+@model List<ABCRetailDemo.Models.OrderEntity>
 @{
     ViewData["Title"] = "Orders";
 }
 
-<h2>Orders</h2>
-<a href="/Order/Create" style="background-color:orange;color:white;padding:10px 15px;border-radius:5px;text-decoration:none;">Create Order</a>
-<table style="width:100%; margin-top:15px; border-collapse:collapse;">
-    <thead style="background-color:black; color:white;">
+<h1>Orders</h1>
+<a asp-action="Create" class="btn btn-primary mb-3">Create Order</a>
+
+<table class="table table-bordered">
+    <thead>
         <tr>
-            <th style="padding:10px;">Order JSON</th>
+            <th>Customer</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Order Date</th>
         </tr>
     </thead>
     <tbody>
-        @foreach(var order in Model)
+        @foreach (var order in Model)
         {
-            <tr style="border-bottom:1px solid #ddd;">
-                <td style="padding:10px;">@order</td>
+            <tr>
+                <td>@order.CustomerName</td>
+                <td>@order.ProductName</td>
+                <td>@order.Quantity</td>
+                <td>@order.Price</td>
+                <td>@order.OrderDate?.ToLocalTime().ToString("g")</td>
             </tr>
         }
     </tbody>

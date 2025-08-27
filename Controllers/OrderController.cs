@@ -1,33 +1,59 @@
 using ABCRetailDemo.Models;
 using ABCRetailDemo.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
+using Azure;
 
 namespace ABCRetailDemo.Controllers
 {
     public class OrderController : Controller
     {
+        private readonly TableService _tableService;
         private readonly QueueService _queueService;
 
-        public OrderController(QueueService queueService) => _queueService = queueService;
-
-        [HttpGet] 
-        public IActionResult Create() => View();
-
-        [HttpPost]
-        public async Task<IActionResult> Create(OrderMessage order)
+        public OrderController(TableService tableService, QueueService queueService)
         {
-            order.OrderId = Guid.NewGuid().ToString();
-            string messageJson = JsonSerializer.Serialize(order);
-            await _queueService.EnqueueOrderAsync(messageJson);
-            return RedirectToAction("Index");
+            _tableService = tableService;
+            _queueService = queueService;
         }
 
+        // List Orders
         public async Task<IActionResult> Index()
         {
-            // For demo purposes, we just list queue messages
-            // You can extend this to deserialize JSON messages
-            return View(); 
+            var orders = await _tableService.GetOrdersAsync();
+            return View(orders);
+        }
+
+        // GET: Create
+        [HttpGet]
+        public IActionResult Create() => View();
+
+        // POST: Create
+        [HttpPost]
+        public async Task<IActionResult> Create(string customerName, string productName, int quantity, decimal price)
+        {
+            if (string.IsNullOrWhiteSpace(customerName) || string.IsNullOrWhiteSpace(productName) || quantity <= 0)
+            {
+                ModelState.AddModelError("", "All fields are required and quantity must be > 0.");
+                return View();
+            }
+
+            var order = new OrderEntity
+            {
+                RowKey = Guid.NewGuid().ToString(),
+                CustomerName = customerName,
+                ProductName = productName,
+                Quantity = quantity,
+                Price = price,
+                OrderDate = DateTime.UtcNow,
+                ETag = ETag.All
+            };
+
+            await _tableService.AddOrderAsync(order);
+
+            // Add message to queue
+            await _queueService.EnqueueOrderAsync($"{order.CustomerName}|{order.ProductName}|{order.Quantity}|{order.OrderDate}");
+
+            return RedirectToAction("Index");
         }
     }
 }
