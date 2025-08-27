@@ -1,0 +1,33 @@
+@{
+    ViewData["Title"] = "Logs";
+    var logs = ViewBag.Logs as List<string>;
+}
+
+<h1>Uploaded Logs</h1>
+
+@if (logs != null && logs.Count > 0)
+{
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>File Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < logs.Count; i++)
+            {
+                <tr>
+                    <td>@(i + 1)</td>
+                    <td>@logs[i]</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info mt-3">
+        No logs uploaded yet.
+    </div>
+}
