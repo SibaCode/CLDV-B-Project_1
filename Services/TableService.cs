@@ -50,5 +50,42 @@ namespace ABCRetailDemo.Services
             }
             return list;
         }
+
+        public async Task<ProductEntity> GetProductAsync(string partitionKey, string rowKey)
+{
+    try
+    {
+        var entity = await _productTable.GetEntityAsync<ProductEntity>(partitionKey, rowKey);
+        return entity.Value;
+    }
+    catch
+    {
+        return null;
+    }
+}
+
+public async Task UpdateProductAsync(ProductEntity product)
+{
+    await _productTable.UpdateEntityAsync(product, product.ETag, Azure.Data.Tables.TableUpdateMode.Replace);
+}
+
+public async Task DeleteProductAsync(string partitionKey, string rowKey)
+{
+    try
+    {
+        var entity = await _productTable.GetEntityAsync<ProductEntity>(partitionKey, rowKey);
+        if (entity != null)
+        {
+            await _productTable.DeleteEntityAsync(partitionKey, rowKey);
+        }
+    }
+    catch (Exception ex)
+    {
+        // Log the exception (ex) if necessary
+        throw;
+    }
+}
+
+
     }
 }

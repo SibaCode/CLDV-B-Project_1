@@ -15,22 +15,64 @@ namespace ABCRetailDemo.Controllers
             _blobService = blobService;
         }
 
-        public async Task<IActionResult> Index() => View(await _tableService.GetProductsAsync());
+        // List all products
+        public async Task<IActionResult> Index()
+        {
+            var products = await _tableService.GetProductsAsync();
+            return View(products);
+        }
 
-        [HttpGet] 
+        // Create
+        [HttpGet]
         public IActionResult Create() => View();
 
         [HttpPost]
         public async Task<IActionResult> Create(ProductEntity product, IFormFile image)
         {
             if (image != null)
-            {
                 product.ImageUrl = await _blobService.UploadImageAsync(image);
-            }
 
             product.RowKey = Guid.NewGuid().ToString();
+            product.PartitionKey = "Products";
             await _tableService.AddProductAsync(product);
             return RedirectToAction("Index");
         }
+
+        // Edit
+        [HttpGet]
+        public async Task<IActionResult> Edit(string rowKey)
+        {
+            var product = await _tableService.GetProductAsync("Products", rowKey);
+            if (product == null) return NotFound();
+            return View(product);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(ProductEntity product, IFormFile? image)
+        {
+            if (image != null)
+                product.ImageUrl = await _blobService.UploadImageAsync(image);
+
+            await _tableService.UpdateProductAsync(product);
+            return RedirectToAction("Index");
+        }
+
+        // Delete
+        [HttpGet]
+public async Task<IActionResult> Delete(string rowKey)
+{
+    var product = await _tableService.GetProductAsync("Products", rowKey);
+    if (product == null) return NotFound();
+    return View(product);
+}
+
+[HttpPost, ActionName("Delete")]
+public async Task<IActionResult> DeleteConfirmed(string rowKey)
+{
+    await _tableService.DeleteProductAsync("Products", rowKey);
+    return RedirectToAction("Index");
+}
+
+        
     }
 }
