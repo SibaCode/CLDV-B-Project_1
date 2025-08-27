@@ -2,56 +2,103 @@
     ViewData["Title"] = "Create Order";
 }
 
-<h1>Create Order</h1>
+<div class="container mt-5">
+    <div class="card shadow border-0 rounded-3">
+        <div class="card-header bg-dark text-white">
+            <h2>Create Order</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div class="form-group mb-3">
+                    <label>Customer</label>
+                    <select name="customerName" class="form-control" required>
+                        <option value="">-- Select Customer --</option>
+                        @if (ViewBag.Customers != null)
+                        {
+                            foreach (var c in ViewBag.Customers)
+                            {
+                                <option value="@c.FullName">@c.FullName</option>
+                            }
+                        }
+                    </select>
+                </div>
 
-<form asp-action="Create" method="post">
-    <div class="mb-3">
-        <label>Customer</label>
-        <select name="customerName" class="form-control" required>
-            <option value="">-- Select Customer --</option>
-            @if (ViewBag.Customers != null)
+                <div class="form-group mb-3">
+                    <label>Product</label>
+                    <select name="productName" class="form-control" required>
+                        <option value="">-- Select Product --</option>
+                        @if (ViewBag.Products != null)
+                        {
+                            foreach (var p in ViewBag.Products)
+                            {
+                                <option value="@p.ProductName">@p.ProductName</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label>Quantity</label>
+                    <input type="number" name="quantity" class="form-control" min="1" value="1" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label>Price</label>
+                    <input type="number" name="price" class="form-control" step="0.01" required />
+                </div>
+
+                <button type="submit" class="btn-create">Create Order</button>
+            </form>
+
+            @if (!ViewData.ModelState.IsValid)
             {
-                foreach (var c in ViewBag.Customers)
-                {
-                    <option value="@c.FullName">@c.FullName</option>
-                }
+                <div class="alert alert-danger mt-3">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <p>@error.ErrorMessage</p>
+                    }
+                </div>
             }
-        </select>
+        </div>
     </div>
+</div>
 
-    <div class="mb-3">
-        <label>Product</label>
-        <select name="productName" class="form-control" required>
-            <option value="">-- Select Product --</option>
-            @if (ViewBag.Products != null)
-            {
-                foreach (var p in ViewBag.Products)
-                {
-                    <option value="@p.ProductName">@p.ProductName</option>
-                }
-            }
-        </select>
-    </div>
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #fafafa;
+    }
 
-    <div class="mb-3">
-        <label>Quantity</label>
-        <input type="number" name="quantity" class="form-control" min="1" value="1" required />
-    </div>
+    .card-header {
+        background-color: #000000 !important;
+        font-weight: 600;
+    }
 
-    <div class="mb-3">
-        <label>Price</label>
-        <input type="number" name="price" class="form-control" step="0.01" required />
-    </div>
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        padding: 10px 12px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
 
-    <button type="submit" class="btn btn-success">Create</button>
-</form>
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 6px rgba(0,123,255,0.3);
+        outline: none;
+    }
 
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="alert alert-danger mt-3">
-        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-        {
-            <p>@error.ErrorMessage</p>
-        }
-    </div>
-}
+    .btn-create {
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-create:hover {
+        background-color: #218838;
+    }
+
+    .f
