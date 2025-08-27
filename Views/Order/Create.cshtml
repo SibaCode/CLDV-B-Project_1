@@ -6,20 +6,52 @@
 
 <form asp-action="Create" method="post">
     <div class="mb-3">
-        <label>Customer Name</label>
-        <input type="text" name="customerName" class="form-control" required />
+        <label>Customer</label>
+        <select name="customerName" class="form-control" required>
+            <option value="">-- Select Customer --</option>
+            @if (ViewBag.Customers != null)
+            {
+                foreach (var c in ViewBag.Customers)
+                {
+                    <option value="@c.FullName">@c.FullName</option>
+                }
+            }
+        </select>
     </div>
+
     <div class="mb-3">
-        <label>Product Name</label>
-        <input type="text" name="productName" class="form-control" required />
+        <label>Product</label>
+        <select name="productName" class="form-control" required>
+            <option value="">-- Select Product --</option>
+            @if (ViewBag.Products != null)
+            {
+                foreach (var p in ViewBag.Products)
+                {
+                    <option value="@p.ProductName">@p.ProductName</option>
+                }
+            }
+        </select>
     </div>
+
     <div class="mb-3">
         <label>Quantity</label>
-        <input type="number" name="quantity" class="form-control" min="1" required />
+        <input type="number" name="quantity" class="form-control" min="1" value="1" required />
     </div>
+
     <div class="mb-3">
         <label>Price</label>
         <input type="number" name="price" class="form-control" step="0.01" required />
     </div>
+
     <button type="submit" class="btn btn-success">Create</button>
 </form>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger mt-3">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
+}

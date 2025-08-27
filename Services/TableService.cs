@@ -67,7 +67,29 @@ public async Task AddOrderAsync(OrderEntity order) =>
             }
             return orders;
         }
-        public async Task<ProductEntity> GetProductAsync(string partitionKey, string rowKey)
+     
+
+     
+public async Task UpdateProductAsync(ProductEntity product)
+{
+    await _productTable.UpdateEntityAsync(product, product.ETag, Azure.Data.Tables.TableUpdateMode.Replace);
+}
+// Get a single customer by PartitionKey + RowKey
+public async Task<CustomerEntity?> GetCustomerAsync(string partitionKey, string rowKey)
+{
+    try
+    {
+        var entity = await _customerTable.GetEntityAsync<CustomerEntity>(partitionKey, rowKey);
+        return entity.Value;
+    }
+    catch
+    {
+        return null;
+    }
+}
+
+// Get a single product by PartitionKey + RowKey
+public async Task<ProductEntity?> GetProductAsync(string partitionKey, string rowKey)
 {
     try
     {
@@ -78,12 +100,6 @@ public async Task AddOrderAsync(OrderEntity order) =>
     {
         return null;
     }
-}
-
-     
-public async Task UpdateProductAsync(ProductEntity product)
-{
-    await _productTable.UpdateEntityAsync(product, product.ETag, Azure.Data.Tables.TableUpdateMode.Replace);
 }
 
 public async Task DeleteProductAsync(string partitionKey, string rowKey)

@@ -23,37 +23,48 @@ namespace ABCRetailDemo.Controllers
             return View(orders);
         }
 
-        // GET: Create
+        // GET: Create Order
         [HttpGet]
-        public IActionResult Create() => View();
-
-        // POST: Create
-        [HttpPost]
-        public async Task<IActionResult> Create(string customerName, string productName, int quantity, decimal price)
+        public async Task<IActionResult> Create()
         {
-            if (string.IsNullOrWhiteSpace(customerName) || string.IsNullOrWhiteSpace(productName) || quantity <= 0)
-            {
-                ModelState.AddModelError("", "All fields are required and quantity must be > 0.");
-                return View();
-            }
-
-            var order = new OrderEntity
-            {
-                RowKey = Guid.NewGuid().ToString(),
-                CustomerName = customerName,
-                ProductName = productName,
-                Quantity = quantity,
-                Price = price,
-                OrderDate = DateTime.UtcNow,
-                ETag = ETag.All
-            };
-
-            await _tableService.AddOrderAsync(order);
-
-            // Add message to queue
-            await _queueService.EnqueueOrderAsync($"{order.CustomerName}|{order.ProductName}|{order.Quantity}|{order.OrderDate}");
-
-            return RedirectToAction("Index");
+            ViewBag.Customers = await _tableService.GetCustomersAsync();
+            ViewBag.Products = await _tableService.GetProductsAsync();
+            return View();
         }
+
+        // POST: Create Order
+       [HttpPost]
+public async Task<IActionResult> Create(string customerName, string productName, int quantity, decimal price)
+{
+    if (string.IsNullOrWhiteSpace(customerName) || string.IsNullOrWhiteSpace(productName) || quantity <= 0)
+    {
+        ModelState.AddModelError("", "All fields are required and quantity must be > 0.");
+
+        // Repopulate dropdowns
+        ViewBag.Customers = await _tableService.GetCustomersAsync();
+        ViewBag.Products = await _tableService.GetProductsAsync();
+
+        return View();
+    }
+
+    var order = new OrderEntity
+    {
+        RowKey = Guid.NewGuid().ToString(),
+        CustomerName = customerName,
+        ProductName = productName,
+        Quantity = quantity,
+        Price = price,
+        OrderDate = DateTime.UtcNow,
+        ETag = Azure.ETag.All
+    };
+
+    await _tableService.AddOrderAsync(order);
+
+    // Add message to queue
+    await _queueService.EnqueueOrderAsync($"{order.CustomerName}|{order.ProductName}|{order.Quantity}|{order.OrderDate}");
+
+    return RedirectToAction("Index");
+}
+
     }
 }
