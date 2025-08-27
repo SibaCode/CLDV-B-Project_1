@@ -40,3 +40,4 @@
 /home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/obj/Release/net8.0/ABCRetailDemo.pdb
 /home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/obj/Release/net8.0/ABCRetailDemo.genruntimeconfig.cache
 /home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/obj/Release/net8.0/ref/ABCRetailDemo.dll
+/home/sibahle/Documents/Semester 2/CLDV B/ABCRetailDemo/obj/Release/net8.0/ABCRetailDemo.sourcelink.json
