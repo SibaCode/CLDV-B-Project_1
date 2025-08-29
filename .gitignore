@@ -3,6 +3,23 @@ bin/
 obj/
 publish/
 
+<<<<<<< HEAD
 # Ignore secrets
 appsettings.json
 appsettings.Production.json
+=======
+# User-specific files
+*.user
+*.suo
+*.swp
+*.vs/
+
+# Logs
+*.log
+
+# Secrets - only ignore environment-specific configs
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.json.user
+appsettings.Development.json
+>>>>>>> cf4ab27 (ignore)
