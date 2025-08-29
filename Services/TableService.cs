@@ -14,8 +14,7 @@ namespace ABCRetailDemo.Services
 
         public TableService(IConfiguration config)
         {
-            var connectionString = config["AzureStorage:ConnectionString"];
-           
+        var connectionString = config["AzureFiles:ConnectionString"];
                var shareName = config["AzureFiles:ShareName"];
               if (string.IsNullOrEmpty(connectionString))
             

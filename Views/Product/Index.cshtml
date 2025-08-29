@@ -11,7 +11,6 @@
                 <th>Name</th>
                 <th>Price</th>
                 <th>Description</th>
-                <th>Image</th>
             </tr>
         </thead>
         <tbody>
@@ -21,16 +20,7 @@
                     <td>@product.ProductName</td>
                     <td>@product.Price.ToString("R")</td>
                     <td>@product.Description</td>
-                    <td>
-                        @if (!string.IsNullOrEmpty(product.ImageUrl))
-                        {
-                            <img src="@product.ImageUrl" class="product-img" />
-                        }
-                        else
-                        {
-                            <span>No image</span>
-                        }
-                    </td>
+                 
                 </tr>
             }
         </tbody>

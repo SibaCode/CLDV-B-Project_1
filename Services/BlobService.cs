@@ -1,45 +1,86 @@
-using Azure.Storage.Blobs;
-using Azure.Storage.Sas;
+using ABCRetailDemo.Models;
+using ABCRetailDemo.Services;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
-namespace ABCRetailDemo.Services
+namespace ABCRetailDemo.Controllers
 {
-    public class BlobService
+    public class ProductController : Controller
     {
-        private readonly BlobContainerClient _container;
+        private readonly TableService _tableService;
+        private readonly BlobService _blobService;
 
-        public BlobService(IConfiguration config)
+        public ProductController(TableService tableService, BlobService blobService)
         {
-            var conn = config["AzureStorage:ConnectionString"];
-            var blobServiceClient = new BlobServiceClient(conn);
-
-            // Container for product images
-            _container = blobServiceClient.GetBlobContainerClient("productimages");
-            _container.CreateIfNotExists();
+            _tableService = tableService;
+            _blobService = blobService;
         }
 
-        public async Task<string> UploadImageAsync(IFormFile file)
+        // List all products
+        public async Task<IActionResult> Index()
         {
-            // Upload the blob
-            var blobClient = _container.GetBlobClient(file.FileName);
-            await using var stream = file.OpenReadStream();
-            await blobClient.UploadAsync(stream, overwrite: true);
+            var products = await _tableService.GetProductsAsync();
+            return View(products);
+        }
 
-            // Generate a SAS URL valid for 1 day
-            var sasBuilder = new BlobSasBuilder
+        // Create
+        [HttpGet]
+        public IActionResult Create() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> Create(ProductEntity product, IFormFile? image)
+        {
+            if (image != null)
             {
-                BlobContainerName = _container.Name,
-                BlobName = file.FileName,
-                Resource = "b",
-                ExpiresOn = DateTimeOffset.UtcNow.AddDays(1)
-            };
-            sasBuilder.SetPermissions(BlobSasPermissions.Read);
+                // Upload image and get SAS URL
+                product.ImageUrl = await _blobService.UploadImageAsync(image);
+            }
 
-            var sasUri = blobClient.GenerateSasUri(sasBuilder);
-            return sasUri.ToString();
+            product.RowKey = Guid.NewGuid().ToString();
+            product.PartitionKey = "Products";
+
+            await _tableService.AddProductAsync(product);
+
+            return RedirectToAction("Index");
+        }
+
+        // Edit
+        [HttpGet]
+        public async Task<IActionResult> Edit(string rowKey)
+        {
+            var product = await _tableService.GetProductAsync("Products", rowKey);
+            if (product == null) return NotFound();
+            return View(product);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(ProductEntity product, IFormFile? image)
+        {
+            if (image != null)
+            {
+                product.ImageUrl = await _blobService.UploadImageAsync(image);
+            }
+
+            await _tableService.UpdateProductAsync(product);
+            return RedirectToAction("Index");
+        }
+
+        // Delete
+        [HttpGet]
+        public async Task<IActionResult> Delete(string rowKey)
+        {
+            var product = await _tableService.GetProductAsync("Products", rowKey);
+            if (product == null) return NotFound();
+            return View(product);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(string rowKey)
+        {
+            await _tableService.DeleteProductAsync("Products", rowKey);
+            return RedirectToAction("Index");
         }
     }
 }
