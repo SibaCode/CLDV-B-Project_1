@@ -1,11 +1,33 @@
-public FileService(IConfiguration config)
+using ABCRetailDemo.Services;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+
+// Register custom services
+builder.Services.AddSingleton<FileService>();
+builder.Services.AddSingleton<QueueService>();
+builder.Services.AddSingleton<TableService>();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
 {
-    var connectionString = config["AzureFiles:ConnectionString"];
-    var shareName = config["AzureFiles:ShareName"];
-
-    if (string.IsNullOrWhiteSpace(connectionString) || string.IsNullOrWhiteSpace(shareName))
-        throw new ArgumentNullException("AzureFiles connection string or share name is missing.");
-
-    _shareClient = new ShareClient(connectionString, shareName);
-    _shareClient.CreateIfNotExists();
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
+
+app.Run();
