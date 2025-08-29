@@ -1,32 +1,11 @@
-using ABCRetailDemo.Services;
-
-var builder = WebApplication.CreateBuilder(args);
-
-// Add MVC services
-builder.Services.AddControllersWithViews();
-
-// Register Azure services using Dependency Injection
-builder.Services.AddSingleton<TableService>();
-builder.Services.AddSingleton<BlobService>();
-builder.Services.AddSingleton<QueueService>();
-builder.Services.AddSingleton<FileService>();
-
-var app = builder.Build();
-
-// Configure HTTP request pipeline
-if (!app.Environment.IsDevelopment())
+public FileService(IConfiguration config)
 {
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
+    var connectionString = config["AzureFiles:ConnectionString"];
+    var shareName = config["AzureFiles:ShareName"];
+
+    if (string.IsNullOrWhiteSpace(connectionString) || string.IsNullOrWhiteSpace(shareName))
+        throw new ArgumentNullException("AzureFiles connection string or share name is missing.");
+
+    _shareClient = new ShareClient(connectionString, shareName);
+    _shareClient.CreateIfNotExists();
 }
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-app.UseAuthorization();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
-
-app.Run();

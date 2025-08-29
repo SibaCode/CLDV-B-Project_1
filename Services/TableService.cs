@@ -1,6 +1,7 @@
 using Azure.Data.Tables;
 using ABCRetailDemo.Models;
-
+using Azure.Storage.Files.Shares;
+using Azure.Storage.Files.Shares.Models;
 namespace ABCRetailDemo.Services
 {
     public class TableService
@@ -9,18 +10,23 @@ namespace ABCRetailDemo.Services
         private readonly TableClient _customerTable;
         private readonly TableClient _productTable;
         private readonly TableClient _orderTable;
+        private readonly ShareClient _shareClient;
 
         public TableService(IConfiguration config)
         {
             var connectionString = config["AzureStorage:ConnectionString"];
-            if (string.IsNullOrEmpty(connectionString))
+           
+               var shareName = config["AzureFiles:ShareName"];
+              if (string.IsNullOrEmpty(connectionString))
+            
                 throw new ArgumentNullException("AzureStorage:ConnectionString is missing in appsettings.json");
             var serviceClient = new TableServiceClient(connectionString);
 
             _orderTable = serviceClient.GetTableClient("Orders");
 
             _serviceClient = new TableServiceClient(connectionString);
-   _orderTable = serviceClient.GetTableClient("Orders");
+             _orderTable = serviceClient.GetTableClient("Orders");
+
             _orderTable.CreateIfNotExists();
             // Initialize tables
             _customerTable = _serviceClient.GetTableClient("Customers");
@@ -28,6 +34,8 @@ namespace ABCRetailDemo.Services
 
             _productTable = _serviceClient.GetTableClient("Products");
             _productTable.CreateIfNotExists();
+            _shareClient = new ShareClient(connectionString, shareName);
+            _shareClient.CreateIfNotExists();
         }
 
         public async Task AddCustomerAsync(CustomerEntity customer) =>

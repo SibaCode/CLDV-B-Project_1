@@ -8,7 +8,11 @@ namespace ABCRetailDemo.Services
 
         public QueueService(IConfiguration config)
         {
-            _queue = new QueueClient(config["AzureStorage:ConnectionString"], "orders");
+             var connectionString = config["AzureStorage:ConnectionString"];
+            if (string.IsNullOrEmpty(connectionString))
+                throw new ArgumentNullException("AzureStorage:ConnectionString is missing from configuration.");
+
+            _queue = new QueueClient(connectionString, "orders");
             _queue.CreateIfNotExists();
         }
 
